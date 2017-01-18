@@ -9,3 +9,4 @@ npm i -S express-messages
 npm i -S express-session
 npm i -S express-validators
 npm i -S mysql
+npm i -S bpay
