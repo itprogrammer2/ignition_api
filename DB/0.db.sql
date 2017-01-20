@@ -40,6 +40,7 @@ create table profile (
 	middle_name varchar(50) not null,
 	last_name varchar(50) not null
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+alter table profile add unique(hash_id);
 
 create table accounts (
 	profile_id int not null, 

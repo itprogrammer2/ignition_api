@@ -122,6 +122,8 @@ model.auth = function(data, res, callback){
 	  						COMMIT;';
 
 	  		var now = new Date();
+	  		console.log(now);
+
 	  		var y = now.getFullYear();
 	  		var M = now.getMonth() + 1;
 	  		var d = now.getDate();

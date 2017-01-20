@@ -11,7 +11,7 @@ var app = express();
 
 app.disable('x-powered-by');
 
-app.use(morgan('dev')); // log every request to the console
+//app.use(morgan('dev')); // log every request to the console
 
 //Middleware - BodyParser
 app.use(bodyParser.json());
