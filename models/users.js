@@ -2,6 +2,12 @@ var md5      		= require('md5');
 var mysql      		= require('mysql');
 var crypto 			= require('crypto');
 
+var moment = require('moment-timezone');
+var system_timezone = require('system-timezone');
+var systemimezone = system_timezone();
+
+
+
 //used to generate customer reference number
 var bpay = require('bpay');
 
@@ -121,15 +127,25 @@ model.auth = function(data, res, callback){
 	  						);\
 	  						COMMIT;';
 
-	  		var now = new Date();
-	  		console.log(now);
+	  		var system_date_with_timezone = moment().tz(systemimezone).format();
 
-	  		var y = now.getFullYear();
-	  		var M = now.getMonth() + 1;
-	  		var d = now.getDate();
-	  		var h = now.getHours();
-	  		var m = now.getMinutes();
-	  		var s = now.getSeconds();
+	  		// console.log(moment().year());
+	  		// console.log(moment().month());
+	  		// console.log(moment().date());
+	  		// console.log(moment().hour());
+	  		// console.log(moment().minutes());
+	  		// console.log(moment().seconds());
+	  		// console.log(moment().milliseconds());
+
+	  		// var now = new Date(system_date_with_timezone);
+	  		// console.log(now);
+
+	  		var y = moment().year();
+	  		var M = moment().month() + 1;
+	  		var d = moment().date();
+	  		var h = moment().hour();
+	  		var m = moment().minutes();
+	  		var s = moment().seconds();
 
 	  		if(data.stay_signin == 'true'){
 	  			d++;
