@@ -26,6 +26,7 @@ router.post('/user', getUser);
 router.get('/users', getUsers);
 router.post('/user/register', Register);
 router.post('/user/auth', Signin);
+router.post('/user/logout', Logout);
 //router.get('/user/:id', getUser);
 
 router.post('/content/insert', saveDraftContent);
@@ -104,6 +105,29 @@ function Signin(req, res){
 			}
 
 			res.send(result);
+		});		
+	}
+};
+
+//User logout
+function Logout(req, res){
+	//Validate first
+	var errors = [];
+	for(var i in req.body){
+		if(req.body[i].replace(/\s/g,'') == ''){
+			errors.push({ field : i, msg : 'Required field.' });
+		}
+	}
+	
+	if(errors.length > 0){
+		res.send({ status : false, error: errors });
+	}
+	else {
+		var user = users.logout(req.body, res, function(data){
+
+			data = JSON.parse(data);
+			
+			res.send(data);
 		});		
 	}
 };

@@ -99,6 +99,7 @@ model.auth = function(data, res, callback){
 	var query = 'SELECT \
 					accounts.profile_id  as profile_id, \
 					accounts.username, \
+					profile.hash_id, \
 					profile.first_name, \
 					profile.middle_name, \
 					profile.last_name \
@@ -186,6 +187,34 @@ model.auth = function(data, res, callback){
 	
 }
 
+model.logout = function(data, res, callback){
+	var connection = mysql.createConnection(db.credentials);
+
+	var query = 'DELETE \
+				from users_sessions \
+				where auth_token = ? \
+				;';
+
+	connection.query(query, data._token, function(err, rows, fields) {
+	  	if (err) throw err;
+
+	  	var result = {
+			status: false,
+			count: 0
+		};
+		rows = JSON.parse(JSON.stringify(rows));
+
+		if(rows.affectedRows > 0){
+			result.status = true;
+			result.count = rows.affectedRows;
+		}
+
+	  	callback(JSON.stringify(result));
+	});
+
+	connection.end();
+}
+
 model.fetch_all = function(res, callback){
 	var connection = mysql.createConnection(db.credentials);
 
@@ -224,7 +253,6 @@ model.fetch = function(data, res, callback){
 	var connection = mysql.createConnection(db.credentials);
 
 	var query = 'SELECT \
-					profile.id as profile_id, \
 					profile.hash_id, \
 					profile.first_name, \
 					profile.middle_name, \
