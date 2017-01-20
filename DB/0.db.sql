@@ -35,6 +35,7 @@ create table customers_status (
 
 create table profile (
 	id int not null auto_increment PRIMARY KEY,
+	hash_id varchar(50) not null,
 	first_name varchar(50) not null,
 	middle_name varchar(50) not null,
 	last_name varchar(50) not null
@@ -60,7 +61,7 @@ create table permissions (
 	profile_id int not null,
 	name varchar(50) not null
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-#alter table users_permissions add unique(profile_id, name);
+alter table permissions add unique(profile_id, name);
 
 create table contents (
 	id int not null auto_increment PRIMARY KEY,

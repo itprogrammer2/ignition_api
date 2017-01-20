@@ -62,6 +62,32 @@ model.check_user_session = function(req , res, callback){
 }
 
 model.auth = function(data, res, callback){
+	// var datenow = new Date();
+	// var y = datenow.getFullYear();
+	// var M = datenow.getMonth() + 1;
+	// var d = datenow.getDate();
+	// var h = datenow.getHours();
+	// var m = datenow.getMinutes();
+	// var s = datenow.getSeconds();
+	// var ss = datenow.getMilliseconds();
+
+	// var text1, text2;
+ //    var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz";
+
+ //    for( var i=0; i < 100; i++ )
+ //        text1 += possible.charAt(Math.floor(Math.random() * possible.length));
+
+ //    for( var i=0; i < 100; i++ )
+ //        text2 += possible.charAt(Math.floor(Math.random() * possible.length));
+
+	// var name1 = y+M+d+h+m+s+ss + text1;
+	// var name2 = y+M+d+h+m+s+ss + text2;
+
+	// var code1 = crypto.createHash('md5').update(name1).digest('hex');
+	// var code2 = crypto.createHash('md5').update(name2).digest('hex');
+	// console.log(code1);
+	// console.log(code2);
+
 	var connection = mysql.createConnection(db.credentials);
 
 	var query = 'SELECT \
@@ -180,16 +206,15 @@ model.fetch = function(data, res, callback){
 	var connection = mysql.createConnection(db.credentials);
 
 	var query = 'SELECT \
-					accounts.profile_id  as profile_id, \
-					accounts.username, \
+					profile.id as profile_id, \
+					profile.hash_id, \
 					profile.first_name, \
 					profile.middle_name, \
 					profile.last_name \
-				from accounts \
-				left join profile on (accounts.profile_id = profile.id) \
-				where profile.archived = false and profile.id = ?;';
+				from profile \
+				where profile.id = ?;';
 
-	connection.query(query, data.params.id, function(err, rows, fields) {
+	connection.query(query, data.body.profile_id, function(err, rows, fields) {
 	  	if (err) throw err;
 
 	  	var result = {

@@ -22,11 +22,11 @@ router.all('*', function(req, res, next) {
 //ROUTES
 
 router.get('/', ERROR_MSG);
-router.get('/user', ERROR_MSG);
+router.post('/user', getUser);
 router.get('/users', getUsers);
 router.post('/user/register', Register);
 router.post('/user/auth', Signin);
-router.get('/user/:id', getUser);
+//router.get('/user/:id', getUser);
 
 router.post('/content/insert', saveDraftContent);
 router.post('/content/revert', dropDraftContent);
@@ -53,8 +53,20 @@ function getUsers(req, res){
 
 //Get specific user
 function getUser(req, res){
-	var user = users.fetch(req, res, function(data){
-		res.end(data);
+	users.check_user_session(req, res, function(data){
+		var data = JSON.parse(data);
+		if(data.status){
+			var user = users.fetch(req, res, function(data){
+				res.json(JSON.parse(data));
+			});
+		}
+		else {
+			res.statusCode = 401;
+			res.json({
+				status: false,
+				message: 'User session has expired'
+			});
+		}
 	});
 };
 

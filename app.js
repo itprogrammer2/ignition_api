@@ -4,11 +4,14 @@ var bodyParser = require('body-parser');
 
 var api = require('./routes/api');
 
+var morgan       = require('morgan');
 
 //Initialize Ignition API
 var app = express();
 
 app.disable('x-powered-by');
+
+app.use(morgan('dev')); // log every request to the console
 
 //Middleware - BodyParser
 app.use(bodyParser.json());
