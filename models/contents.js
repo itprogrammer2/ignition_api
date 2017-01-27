@@ -8,7 +8,7 @@ var model = {};
 model.fetch_drafts = function(data, res, callback){
 	var connection = mysql.createConnection(db.credentials);
 
-	var query = 'SELECT * from contents_drafts where created_by = ?;';
+	var query = 'SELECT * from contents_drafts where created_by in (select id from profile where hash_id = ?);';
 
 	connection.query(query, [data.user_id], function(err, rows, fields) {
 	  	if (err) throw err;
@@ -59,9 +59,9 @@ model.fetch_all = function(res, callback){
 
 model.insertdraft = function(data, res, callback){
 	var connection = mysql.createConnection(db.credentials);
-
+	
 	var query = 'BEGIN;\
-				DELETE FROM contents_drafts where contents_id = ? and created_by = ?;\
+				DELETE FROM contents_drafts where contents_id = ? and created_by in (select id from profile where hash_id = ?);\
 				INSERT INTO contents_drafts \
 				(\
 					contents_id,\
@@ -71,7 +71,7 @@ model.insertdraft = function(data, res, callback){
 				)\
 				values\
 				(\
-					?,?,?,?\
+					?,?,?, (select id from profile where hash_id = ?)\
 				)\
 				;\
 				COMMIT;';
@@ -89,7 +89,7 @@ model.dropchanges = function(data, res, callback){
 	var connection = mysql.createConnection(db.credentials);
 
 	var query = 'DELETE from contents_drafts \
-				where created_by = ?\
+				where created_by in (select id from profile where hash_id = ?)\
 				;';
 
 	connection.query(query, [data.user_id], function(err, rows, fields) {
@@ -102,15 +102,16 @@ model.dropchanges = function(data, res, callback){
 }
 
 model.savechanges = function(data, res, callback){
+	console.log(data);
 	var connection = mysql.createConnection(db.credentials);
 
 	var query = 'BEGIN;\
 				UPDATE contents\
 				LEFT JOIN contents_drafts on contents.id = contents_drafts.contents_id\
 				set contents.details = contents_drafts.details\
-				where contents_drafts.created_by = ?\
+				where contents_drafts.created_by in (select id from profile where hash_id = ?)\
 				;\
-				DELETE from contents_drafts where created_by = ?;\
+				DELETE from contents_drafts where created_by in (select id from profile where hash_id = ?);\
 				COMMIT;';
 
 	// var query = 'SELECT\
